@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} > Un titre
+{% endblock %}
+
+{% block body %}
+    <p>Mon titre : {{ titre | raw }}</p>
+    <p>Mon prenom : {{ prenom }}</p>
+    <p>La date d'aujourd'hui: {{ aujourdhui | date }}</p>
+    {# Un commentaire #}
+    {% if prenom == 'Julien' %}
+        <p>Salut !!</p>
+    {% endif %}
+    {% set promos = ['147A', '147B', '146'] %}
+    <ul>
+        {% for chaquePromo in promos %}
+            <li>{{ chaquePromo }}</li>
+        {% else %}
+            <li>Aucun promotion</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+
+
+
