@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SerieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
 class Serie
@@ -15,6 +16,12 @@ class Serie
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotNull(
+        message: 'Déso, il ne peut pas être nul.'
+    )]
+    #[Assert\NotBlank(
+        message: 'Déso, il ne peut pas être blank.'
+    )]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -27,6 +34,10 @@ class Serie
     private ?float $vote = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\GreaterThanOrEqual(
+        0,
+        message: 'Déso, la popu doit être positive.'
+    )]
     private ?float $popularity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -48,6 +59,7 @@ class Serie
     private ?int $tmdbd = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\LessThanOrEqual('today')]
     private ?\DateTimeInterface $dateCreated = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -178,17 +190,22 @@ class Serie
         return $this;
     }
 
-    public function getTmdbId(): ?int
+    /**
+     * @return int|null
+     */
+    public function getTmdbd(): ?int
     {
         return $this->tmdbd;
     }
 
-    public function setTmdbId(?int $tmdbId): self
+    /**
+     * @param int|null $tmdbd
+     */
+    public function setTmdbd(?int $tmdbd): void
     {
-        $this->tmdbd = $tmdbId;
-
-        return $this;
+        $this->tmdbd = $tmdbd;
     }
+
 
     public function getDateCreated(): ?\DateTimeInterface
     {
