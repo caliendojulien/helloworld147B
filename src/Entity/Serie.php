@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SerieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,13 +17,9 @@ class Serie
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Le nom ne peut être blanc.')]
+    #[Assert\Length(min: 2, max: 255)]
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotNull(
-        message: 'Déso, il ne peut pas être nul.'
-    )]
-    #[Assert\NotBlank(
-        message: 'Déso, il ne peut pas être blank.'
-    )]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -34,10 +32,6 @@ class Serie
     private ?float $vote = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\GreaterThanOrEqual(
-        0,
-        message: 'Déso, la popu doit être positive.'
-    )]
     private ?float $popularity = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -46,6 +40,7 @@ class Serie
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $firstAirDate = null;
 
+    #[Assert\GreaterThanOrEqual(propertyPath: "firstAirDate", message: 'Déso.')]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastAirDate = null;
 
@@ -59,11 +54,18 @@ class Serie
     private ?int $tmdbd = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Assert\LessThanOrEqual('today')]
     private ?\DateTimeInterface $dateCreated = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateModified = null;
+
+    #[ORM\OneToMany(mappedBy: 'serie', targetEntity: Season::class)]
+    private Collection $seasons;
+
+    public function __construct()
+    {
+        $this->seasons = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -190,22 +192,17 @@ class Serie
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getTmdbd(): ?int
+    public function getTmdbId(): ?int
     {
         return $this->tmdbd;
     }
 
-    /**
-     * @param int|null $tmdbd
-     */
-    public function setTmdbd(?int $tmdbd): void
+    public function setTmdbId(?int $tmdbId): self
     {
-        $this->tmdbd = $tmdbd;
-    }
+        $this->tmdbd = $tmdbId;
 
+        return $this;
+    }
 
     public function getDateCreated(): ?\DateTimeInterface
     {
@@ -231,4 +228,33 @@ class Serie
         return $this;
     }
 
+    /**
+     * @return Collection<int, Season>
+     */
+    public function getSeasons(): Collection
+    {
+        return $this->seasons;
+    }
+
+    public function addSeason(Season $season): self
+    {
+        if (!$this->seasons->contains($season)) {
+            $this->seasons->add($season);
+            $season->setSerie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeason(Season $season): self
+    {
+        if ($this->seasons->removeElement($season)) {
+            // set the owning side to null (unless already changed)
+            if ($season->getSerie() === $this) {
+                $season->setSerie(null);
+            }
+        }
+
+        return $this;
+    }
 }

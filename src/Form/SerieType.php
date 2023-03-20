@@ -38,9 +38,10 @@ class SerieType extends AbstractType
             ->add('lastAirDate')
             ->add('backdrop')
             ->add('poster')
-            ->add('tmdbd')
+//            ->add('tmdbd')
             ->add('dateCreated')
             ->add('dateModified')
+
             ->add('Ajouter2', SubmitType::class);
     }
 

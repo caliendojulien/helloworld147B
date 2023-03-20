@@ -4,5 +4,9 @@
     <p>Une seule série</p>
     <p>{{ id.name }}</p>
     <p>{{ id.overview }}</p>
+    <!-- uneseuleserie.html.twig -->
+    {% for chaqueSaison in id.seasons %}
+        <img src="{{ asset('img/posters/seasons/'~chaqueSaison.poster) }}" alt="{{ chaqueSaison.poster }}">
+    {% endfor %}
 {% endblock %}
 

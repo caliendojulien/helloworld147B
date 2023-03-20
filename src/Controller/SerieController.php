@@ -18,13 +18,8 @@ class SerieController extends AbstractController
         SerieRepository $serieRepository
     ): Response
     {
-        $series = $serieRepository->findAll();
-//        $series = $serieRepository->findBy(
-//            [], // WHERE
-//            [], // ORDER BY
-//            30, // Nb enregistrements
-//            0 // décalage
-//        );
+//        $series = $serieRepository->findAll();
+        $series = $serieRepository->findAllWithSeasons();
         return $this->render('serie/touteslesseries.html.twig',
             compact('series')
         );
