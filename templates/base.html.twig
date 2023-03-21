@@ -16,6 +16,9 @@
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <link rel="stylesheet" href="admin.css">
+    {% endif %}
 </head>
 <body>
 <header>
@@ -24,6 +27,10 @@
             <li><a href="{{ url('home_index') }}">Home</a></li>
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
             <li><a href="{{ path('serie_touteslesseries') }}">Toutes les series</a></li>
+            <!-- Si l'utilisateur est connecté, j'affiche son email -->
+            {% if app.user %}
+                <li>{{ app.user.email }}</li>
+            {% endif %}
         </ul>
     </nav>
 </header>

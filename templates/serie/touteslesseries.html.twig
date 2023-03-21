@@ -9,7 +9,7 @@
                     <img
                             src="{{ asset("img/posters/series/" ~ chaqueSerie.poster) }}"
                             alt=""
-                            title="{{ chaqueSerie.seasons | length }} saison(s)"
+                            title="{{ chaqueSerie.seasons | length }} saison{{ chaqueSerie.seasons | length > 1 ? 's' : '' }}"
                     >
                 </a>
                 <p>{{ chaqueSerie.name }}</p>

@@ -9,13 +9,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/fruit')]
 class FruitController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'app_fruit_index', methods: ['GET'])]
     public function index(FruitRepository $fruitRepository): Response
     {
+        dump($this->getUser());
         return $this->render('fruit/index.html.twig', [
             'fruits' => $fruitRepository->findAll(),
         ]);
