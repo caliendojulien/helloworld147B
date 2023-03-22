@@ -28,7 +28,6 @@
             <li><a href="{{ url('home_index') }}">Home</a></li>
             <li><a href="{{ path('app_accueil') }}">Accueil</a></li>
             <li><a href="{{ path('serie_touteslesseries') }}">Toutes les series</a></li>
-            <!-- Si l'utilisateur est connecté, j'affiche son email -->
             {% if app.user %}
                 <li>{{ app.user.email }}</li>
             {% endif %}
